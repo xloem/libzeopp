@@ -8,7 +8,11 @@ libzeopp_la_SOURCES = \
 	src/serial/ProtocolException.cpp \
 	src/serial/Reader.cpp
 
-include_HEADERS = include/zeo
+serialincludedir = $(includedir)/zeo/serial
+serialinclude_HEADERS = \
+	include/zeo/serial/Packet.hpp \
+	include/zeo/serial/ProtocolException.hpp \
+	include/zeo/serial/Reader.hpp
 
 noinst_PROGRAMS = test
 
