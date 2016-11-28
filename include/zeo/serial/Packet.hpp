@@ -11,7 +11,7 @@ class Packet
 {
 friend class Reader;
 public:
-	enum class Datatype : uint8_t 
+	enum class Type
 	{
 		Event         = 0x00,
 		SliceEnd      = 0x02,
@@ -22,20 +22,29 @@ public:
 		ZeoTimestamp  = 0x8a,
 		Impedance     = 0x97,
 		BadSignal     = 0x9c,
-		SleepStage    = 0x9d
+		SleepStage    = 0x9d,
+
+		StreamClosed  = -0x01,
+		BadMagic      = -0x02,
+		CorruptLength = -0x03,
+		BadVersion    = -0x04,
+		CorruptData   = -0x05,
+		IncorrectTime = -0x06,
+		SkippedTime   = -0x07
 	};
 
-	static std::string datatypeStr(Datatype type);
-
 	uint8_t checksum;
-	bool checksumCorrect;
 	double timestamp;
 	uint8_t sequenceNumber;
-	Datatype datatype;
+	Type type;
 	
-	std::vector<uint8_t> rawData;
+	std::vector<uint8_t> data;
+
+	bool isValid();
 
 	std::string str() const;
+
+	static std::string typeStr(Type type);
 };
 
 

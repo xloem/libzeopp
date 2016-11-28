@@ -6,29 +6,50 @@
 namespace zeo {
 namespace serial {
 
-std::string Packet::datatypeStr(Datatype type)
+bool Packet::isValid()
+{
+	return static_cast<int>(type) >= 0;
+}
+
+std::string Packet::typeStr(Type type)
 {
 	switch (type) {
-	case Datatype::Event:
+	case Type::Event:
 		return "Event";
-	case Datatype::SliceEnd:
+	case Type::SliceEnd:
 		return "SliceEnd";
-	case Datatype::Version:
+	case Type::Version:
 		return "Version";
-	case Datatype::Waveform:
+	case Type::Waveform:
 		return "Waveform";
-	case Datatype::FrequencyBins:
+	case Type::FrequencyBins:
 		return "FrequencyBins";
-	case Datatype::SQI:
+	case Type::SQI:
 		return "SQI";
-	case Datatype::ZeoTimestamp:
+	case Type::ZeoTimestamp:
 		return "ZeoTimestamp";
-	case Datatype::Impedance:
+	case Type::Impedance:
 		return "Impedance";
-	case Datatype::BadSignal:
+	case Type::BadSignal:
 		return "BadSignal";
-	case Datatype::SleepStage:
+	case Type::SleepStage:
 		return "SleepStage";
+
+	case Type::StreamClosed:
+		return "StreamClosed";
+	case Type::BadMagic:
+		return "BadMagic";
+	case Type::CorruptLength:
+		return "CorruptLength";
+	case Type::BadVersion:
+		return "BadVersion";
+	case Type::CorruptData:
+		return "CorruptData";
+	case Type::IncorrectTime:
+		return "IncorrectTime";
+	case Type::SkippedTime:
+		return "SkippedTime";
+
 	default:
 		std::stringstream ss;
 		ss << "Unknown(" << std::setfill('0') << std::setw(2) << std::hex << static_cast<uint8_t>(type) << ")";
@@ -39,14 +60,9 @@ std::string Packet::datatypeStr(Datatype type)
 std::string Packet::str() const
 {
 	std::stringstream ss;
-	ss << "ZeoSerialPacket #" << +sequenceNumber << " @" << std::setprecision(17) << timestamp;
-	if (checksumCorrect)
-		ss << " intact ";
-	else
-		ss << " corrupt ";
-	ss << datatypeStr(datatype);
+	ss << "ZeoSerialPacket #" << +sequenceNumber << " @" << std::setprecision(17) << timestamp << " " << typeStr(type);
 	ss << std::hex;
-	for (uint8_t byte : rawData)
+	for (uint8_t byte : data)
 		ss << " " << std::setfill('0') << std::setw(2) << +byte;
 	return ss.str();
 }

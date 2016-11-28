@@ -1,4 +1,3 @@
-#include <zeo/serial/ProtocolException.hpp>
 #include <zeo/serial/Reader.hpp>
 
 #include <iostream>
@@ -15,16 +14,14 @@ int main(int argc, const char ** argv)
 
 	zeo::serial::Reader reader(*stream);
 
-	for (;;)
-	try {
-		zeo::serial::Packet packet = reader.read();
-		std::cout << packet.str() << std::endl;
-	} catch(zeo::serial::ProtocolException pe) {
-		std::cerr << "ProtocolException: " << pe.what() << std::endl;
-	} catch(std::ios_base::failure ex) {
-		std::cerr << "IO Error: " << ex.what() << std::endl;
-		break;
-	}
+	zeo::serial::Packet packet;
+	do {
+		packet = reader.read();
+		if (packet.isValid())
+			std::cout << packet.str() << std::endl;
+		else
+			std::cerr << packet.str() << std::endl;
+	} while (packet.type != zeo::serial::Packet::Type::StreamClosed);
 
 	return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Packet.hpp"
+#include "PacketInvalid.hpp"
 
 #include <cstdint>
 #include <deque>
@@ -19,7 +20,7 @@ public:
 
 private:
 	void ensureBuffer(size_t size);
-	void protocolException(std::string descr);
+	PacketInvalid invalid(Packet const & sofar, Packet::Type what, bool advance = true);
 
 	std::istream & stream;
 	std::deque<uint8_t> buffer;

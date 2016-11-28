@@ -27,3 +27,16 @@
 *.exe
 *.out
 *.app
+/test
+
+# Autotools stuff
+.deps/
+.dirstamp
+*.m4
+/autom4te.cache
+/config/
+/config.*
+/configure
+/libtool
+/Makefile.in
+/Makefile
